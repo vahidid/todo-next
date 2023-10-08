@@ -1,6 +1,6 @@
 {
-  "name": "material-ui-nextjs-ts",
-  "version": "5.0.0",
+  "name": "naji-todo-app",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
