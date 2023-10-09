@@ -16,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <Container
         component='main'
         maxWidth='xs'
+        sx={{ height: '100vh' }}
       >
         {children}
       </Container>
