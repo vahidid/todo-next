@@ -2,12 +2,19 @@
 import PageWrapper from '@/components/UI/PageWrapper';
 import Typography from '@mui/material/Typography';
 import { Stack, TextField } from '@mui/material';
-import Button from '@mui/material/Button';
 import Link from 'next/link';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { LoadingButton } from '@mui/lab';
+import useSWRMutation from 'swr/mutation';
+import { RegisterService } from '@/services/AuthService';
 
 export default function Register() {
+  // Api
+  const { trigger, isMutating } = useSWRMutation(
+    '/api/register',
+    RegisterService
+  );
   // Validation
   const FormValidation = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -31,7 +38,12 @@ export default function Register() {
       password_confirmation: '',
     },
     validationSchema: FormValidation,
-    onSubmit: () => {
+    onSubmit: async (formValues) => {
+      await trigger({
+        email: formValues.email,
+        name: formValues.name,
+        password: formValues.password,
+      });
       console.log('submit');
     },
   });
@@ -47,7 +59,7 @@ export default function Register() {
         component='form'
         onSubmit={handleSubmit}
       >
-        <Typography>
+        <Typography variant='body1'>
           Please complete fields to register a new account
         </Typography>
         <TextField
@@ -84,9 +96,14 @@ export default function Register() {
           label='Confirm Password'
           variant='outlined'
         />
-        <Button variant='contained' fullWidth type='submit'>
+        <LoadingButton
+          loading={isMutating}
+          variant='contained'
+          fullWidth
+          type='submit'
+        >
           Register
-        </Button>
+        </LoadingButton>
       </Stack>
 
       <Typography textAlign='center'>Already have an account?</Typography>
