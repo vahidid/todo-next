@@ -4,8 +4,6 @@ import { USERS_STORAGE_KEY } from '@/utils/constants';
 import { v4 } from 'uuid';
 
 export async function POST(request: Request) {
-  cookies().set('name', 'lee');
-
   // Create User
   const user = (await request.json()) as User;
   const users = cookies().get(USERS_STORAGE_KEY);

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
 import { Container } from '@mui/material';
+import { Providers } from '@/redux/provider';
 
 export const metadata = {
   title: 'UpToDo',
@@ -15,11 +16,13 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <ThemeRegistry>
-          <Container component='main' maxWidth='xs' sx={{ height: '100vh' }}>
-            {children}
-          </Container>
-        </ThemeRegistry>
+        <Providers>
+          <ThemeRegistry>
+            <Container component='main' maxWidth='xs' sx={{ height: '100vh' }}>
+              {children}
+            </Container>
+          </ThemeRegistry>
+        </Providers>
       </body>
     </html>
   );

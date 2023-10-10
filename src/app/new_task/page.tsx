@@ -2,20 +2,60 @@
 
 import PageWrapper from '@/components/UI/PageWrapper';
 import Typography from '@mui/material/Typography';
-import { IconButton, Stack, TextField, Tooltip } from '@mui/material';
+import { Alert, IconButton, Stack, TextField, Tooltip } from '@mui/material';
 import { Event, Flag, LocalOffer } from '@mui/icons-material';
-import Button from '@mui/material/Button';
 import AppHeader from '@/components/AppHeader';
+import { useFormik } from 'formik';
+import { TaskPriority } from '@/models/Task';
+import { useCreateTaskMutation } from '@/services/TaskServices';
+import { LoadingButton } from '@mui/lab';
 
 export default function NewTask() {
+  // Api
+  const [trigger, { isLoading, isError, isSuccess }] = useCreateTaskMutation();
+
+  // Form
+  const { values, handleBlur, handleChange, handleSubmit } = useFormik({
+    initialValues: {
+      title: '',
+      description: '',
+      datetime: undefined,
+      tag: '',
+      priority: TaskPriority.Medium,
+    },
+    onSubmit: async (formValues) => {
+      const res = await trigger(formValues);
+      console.log(res);
+      console.log('Submit');
+    },
+  });
   return (
     <PageWrapper justifyContent='center' spacing={5}>
       <AppHeader />
       <Typography variant='h4'>New Task</Typography>
 
-      <Stack flex={1} spacing={5}>
-        <TextField label='Title' />
-        <TextField label='Description' multiline rows={5} />
+      {isError && (
+        <Alert severity='error'>An error was occurred, try again</Alert>
+      )}
+      {isSuccess && <Alert severity='success'>Task successfully added</Alert>}
+
+      <Stack flex={1} spacing={5} component='form' onSubmit={handleSubmit}>
+        <TextField
+          label='Title'
+          value={values.title}
+          onChange={handleChange}
+          name='title'
+          onBlur={handleBlur}
+        />
+        <TextField
+          label='Description'
+          multiline
+          rows={5}
+          value={values.description}
+          onChange={handleChange}
+          name='description'
+          onBlur={handleBlur}
+        />
 
         <Stack direction='row' justifyContent='space-between'>
           <Tooltip title='Add event date'>
@@ -36,9 +76,14 @@ export default function NewTask() {
           </Tooltip>
         </Stack>
 
-        <Button variant='contained' color='primary'>
+        <LoadingButton
+          loading={isLoading}
+          variant='contained'
+          color='primary'
+          type='submit'
+        >
           Save
-        </Button>
+        </LoadingButton>
       </Stack>
     </PageWrapper>
   );
