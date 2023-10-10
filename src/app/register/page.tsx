@@ -32,8 +32,11 @@ export default function Register() {
       password: '',
       password_confirmation: '',
     },
-    validationSchema: FormValidation,
+    // validationSchema: FormValidation,
     onSubmit: async (formValues) => {
+      fetch('/api/register', {
+        method: 'POST',
+      });
       console.log('submit');
     },
   });

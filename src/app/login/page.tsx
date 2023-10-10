@@ -11,6 +11,9 @@ export default function Login() {
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: { email: '', password: '' },
     onSubmit: () => {
+      fetch('/api/register', {
+        method: 'GET',
+      });
       console.log('submit');
     },
   });
