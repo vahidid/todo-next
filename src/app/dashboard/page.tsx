@@ -20,7 +20,7 @@ export default function Dashboard() {
           <Typography variant='h6'>Welcome to UpToDo</Typography>
 
           {data && data.length > 0 ? (
-            <Stack flex={1} py={4} width='100%'>
+            <Stack flex={1} py={4} width='100%' spacing={2}>
               {data.map((item) => (
                 <TaskItem key={item.id} item={item} />
               ))}
