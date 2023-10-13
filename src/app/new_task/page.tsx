@@ -19,10 +19,12 @@ import { LoadingButton } from '@mui/lab';
 import ChooseDateTime from '@/components/ChooseDateTime';
 import { useState } from 'react';
 import moment from 'moment/moment';
+import ChoosePriority from '@/components/ChoosePriority';
 
 export default function NewTask() {
   // State
   const [dueModal, setDueModal] = useState(false);
+  const [priorityModal, setPriorityModal] = useState(false);
   // Api
   const [trigger, { isLoading, isError, isSuccess }] = useCreateTaskMutation();
 
@@ -78,11 +80,16 @@ export default function NewTask() {
               <Typography>{moment(values.datetime).format('llll')}</Typography>
             )}
           </Box>
-          <Tooltip title='Set priority'>
-            <IconButton>
-              <Flag />
-            </IconButton>
-          </Tooltip>
+          <Box>
+            <Tooltip title='Set priority'>
+              <IconButton onClick={() => setPriorityModal(true)}>
+                <Flag />
+              </IconButton>
+            </Tooltip>
+            {values.priority && (
+              <Typography>{TaskPriority[values.priority]}</Typography>
+            )}
+          </Box>
         </Stack>
 
         <LoadingButton
@@ -102,6 +109,16 @@ export default function NewTask() {
           setFieldValue('datetime', date.unix());
           setDueModal(false);
         }}
+      />
+
+      {/*  Set Priority */}
+      <ChoosePriority
+        onClose={() => setPriorityModal(false)}
+        onSubmit={(p) => {
+          setFieldValue('priority', p);
+          setPriorityModal(false);
+        }}
+        open={priorityModal}
       />
     </PageWrapper>
   );

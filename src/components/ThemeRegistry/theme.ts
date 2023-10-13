@@ -17,6 +17,7 @@ const theme = createTheme({
       paper: '#363636',
     },
   },
+  shape: { borderRadius: 8 },
   typography: {
     fontFamily: roboto.style.fontFamily,
   },
