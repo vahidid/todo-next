@@ -10,7 +10,6 @@ export type Task = {
   title: string;
   description: string;
   datetime?: number;
-  tag?: string;
   priority: TaskPriority;
   isDone: boolean;
   createdAt?: Date;

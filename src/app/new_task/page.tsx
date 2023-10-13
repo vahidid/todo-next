@@ -2,33 +2,43 @@
 
 import PageWrapper from '@/components/UI/PageWrapper';
 import Typography from '@mui/material/Typography';
-import { Alert, IconButton, Stack, TextField, Tooltip } from '@mui/material';
-import { Event, Flag, LocalOffer } from '@mui/icons-material';
+import {
+  Alert,
+  Box,
+  IconButton,
+  Stack,
+  TextField,
+  Tooltip,
+} from '@mui/material';
+import { Event, Flag } from '@mui/icons-material';
 import AppHeader from '@/components/AppHeader';
 import { useFormik } from 'formik';
 import { TaskPriority } from '@/models/Task';
 import { useCreateTaskMutation } from '@/services/TaskServices';
 import { LoadingButton } from '@mui/lab';
+import ChooseDateTime from '@/components/ChooseDateTime';
+import { useState } from 'react';
+import moment from 'moment/moment';
 
 export default function NewTask() {
+  // State
+  const [dueModal, setDueModal] = useState(false);
   // Api
   const [trigger, { isLoading, isError, isSuccess }] = useCreateTaskMutation();
 
   // Form
-  const { values, handleBlur, handleChange, handleSubmit } = useFormik({
-    initialValues: {
-      title: '',
-      description: '',
-      datetime: undefined,
-      tag: '',
-      priority: TaskPriority.Medium,
-    },
-    onSubmit: async (formValues) => {
-      const res = await trigger(formValues);
-      console.log(res);
-      console.log('Submit');
-    },
-  });
+  const { values, handleBlur, handleChange, handleSubmit, setFieldValue } =
+    useFormik({
+      initialValues: {
+        title: '',
+        description: '',
+        datetime: undefined,
+        priority: TaskPriority.Medium,
+      },
+      onSubmit: async (formValues) => {
+        await trigger(formValues);
+      },
+    });
   return (
     <PageWrapper justifyContent='center' spacing={5}>
       <AppHeader />
@@ -58,17 +68,16 @@ export default function NewTask() {
         />
 
         <Stack direction='row' justifyContent='space-between'>
-          <Tooltip title='Add event date'>
-            <IconButton>
-              <Event />
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title='Add a tag'>
-            <IconButton>
-              <LocalOffer />
-            </IconButton>
-          </Tooltip>
+          <Box>
+            <Tooltip title='Set due date'>
+              <IconButton onClick={() => setDueModal(true)}>
+                <Event />
+              </IconButton>
+            </Tooltip>
+            {values.datetime && (
+              <Typography>{moment(values.datetime).format('llll')}</Typography>
+            )}
+          </Box>
           <Tooltip title='Set priority'>
             <IconButton>
               <Flag />
@@ -85,6 +94,15 @@ export default function NewTask() {
           Save
         </LoadingButton>
       </Stack>
+      {/*  Set Due Date Modal */}
+      <ChooseDateTime
+        open={dueModal}
+        onClose={() => setDueModal(false)}
+        onSubmit={(date) => {
+          setFieldValue('datetime', date.unix());
+          setDueModal(false);
+        }}
+      />
     </PageWrapper>
   );
 }

@@ -1,30 +1,39 @@
 'use client';
 import PageWrapper from '@/components/UI/PageWrapper';
 import Typography from '@mui/material/Typography';
-import SvgTest from '@/assets/vectors/index-empty.svg';
-import Image from 'next/image';
-import { Fab, Stack } from '@mui/material';
+import { CircularProgress, Fab, Stack } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import Link from 'next/link';
 import { useGetAllTasksQuery } from '@/services/TaskServices';
+import NoTasks from '@/components/NoTasks';
+import TaskItem from '@/components/TaskItem';
 
 export default function Dashboard() {
-  const { data } = useGetAllTasksQuery(undefined);
-  console.log(data);
+  const { data, isLoading } = useGetAllTasksQuery(undefined);
+
   return (
     <PageWrapper justifyContent='center' alignItems='center'>
-      <Typography variant='h6'>Welcome to UpToDo</Typography>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Typography variant='h6'>Welcome to UpToDo</Typography>
 
-      <Stack flex={1} height='100%' alignItems='center' justifyContent='center'>
-        <Image src={SvgTest} alt='EmptyList' loading='lazy' />
+          {data && data.length > 0 ? (
+            <Stack flex={1} py={4} width='100%'>
+              {data.map((item) => (
+                <TaskItem key={item.id} item={item} />
+              ))}
+            </Stack>
+          ) : (
+            <NoTasks />
+          )}
 
-        <Typography>What do you want to do today?</Typography>
-        <Typography variant='caption'>Tap + to add your tasks</Typography>
-      </Stack>
-
-      <Fab component={Link} href='/new_task'>
-        <Add />
-      </Fab>
+          <Fab component={Link} href='/new_task'>
+            <Add />
+          </Fab>
+        </>
+      )}
     </PageWrapper>
   );
 }

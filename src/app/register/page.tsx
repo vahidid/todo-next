@@ -34,8 +34,11 @@ export default function Register() {
     },
     // validationSchema: FormValidation,
     onSubmit: async (formValues) => {
-      fetch('/api/register', {
+      fetch('/api/auth/signup', {
         method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
       });
       console.log('submit');
     },

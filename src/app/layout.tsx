@@ -2,6 +2,7 @@ import * as React from 'react';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
 import { Container } from '@mui/material';
 import { Providers } from '@/redux/provider';
+import NextTopLoader from 'nextjs-toploader';
 
 export const metadata = {
   title: 'UpToDo',
@@ -19,6 +20,7 @@ export default function RootLayout({
         <Providers>
           <ThemeRegistry>
             <Container component='main' maxWidth='xs' sx={{ height: '100vh' }}>
+              <NextTopLoader color='#8875FF' />
               {children}
             </Container>
           </ThemeRegistry>
