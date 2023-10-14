@@ -1,6 +1,7 @@
 import { Task } from '@/models/Task';
 import { v4 } from 'uuid';
 import { cookies } from 'next/headers';
+import { TASKS_STORAGE_KEY } from '@/utils/constants';
 
 export async function POST(request: Request) {
   const bodyReq = await request.json();
@@ -12,12 +13,15 @@ export async function POST(request: Request) {
   taskReq.createdAt = new Date();
 
   // Save In Array
-  const allTasks = cookies().get('TASKS');
+  const allTasks = cookies().get(TASKS_STORAGE_KEY);
   if (allTasks) {
     const arraySerialized = JSON.parse(allTasks.value) as Task[];
-    cookies().set('TASKS', JSON.stringify([...arraySerialized, taskReq]));
+    cookies().set(
+      TASKS_STORAGE_KEY,
+      JSON.stringify([...arraySerialized, taskReq])
+    );
   } else {
-    cookies().set('TASKS', JSON.stringify([taskReq]));
+    cookies().set(TASKS_STORAGE_KEY, JSON.stringify([taskReq]));
   }
 
   return new Response(JSON.stringify(taskReq), {
@@ -26,7 +30,7 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  const cookieData = cookies().get('TASKS');
+  const cookieData = cookies().get(TASKS_STORAGE_KEY);
 
   if (cookieData) {
     const tasksRes = JSON.parse(cookieData.value) as Task[];

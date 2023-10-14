@@ -4,17 +4,27 @@ import Typography from '@mui/material/Typography';
 import { Stack, TextField } from '@mui/material';
 import Link from 'next/link';
 import { useFormik } from 'formik';
-import Button from '@mui/material/Button';
+import { useLoginMutation } from '@/services/AuthService';
+import { LoadingButton } from '@mui/lab';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 export default function Login() {
+  // Utils
+  const navigate = useRouter();
+  // Api
+  const [trigger, { isLoading }] = useLoginMutation();
+
   // Form
   const { values, handleChange, handleBlur, handleSubmit } = useFormik({
     initialValues: { email: '', password: '' },
-    onSubmit: () => {
-      fetch('/api/register', {
-        method: 'GET',
-      });
-      console.log('submit');
+    onSubmit: async (formValues) => {
+      const res = await trigger(formValues);
+      if ('data' in res) {
+        navigate.replace('/dashboard');
+      } else {
+        toast.error('Your credentials are not valid');
+      }
     },
   });
 
@@ -46,9 +56,14 @@ export default function Login() {
           variant='outlined'
           type='password'
         />
-        <Button variant='contained' fullWidth type='submit'>
+        <LoadingButton
+          loading={isLoading}
+          variant='contained'
+          fullWidth
+          type='submit'
+        >
           Login
-        </Button>
+        </LoadingButton>
       </Stack>
 
       <Typography textAlign='center'>Don’t have an account?</Typography>

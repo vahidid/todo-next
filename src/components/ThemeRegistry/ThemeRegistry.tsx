@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import NextAppDirEmotionCacheProvider from './EmotionCache';
 import theme from './theme';
+import { Toaster } from 'react-hot-toast';
 
 export default function ThemeRegistry({
   children,
@@ -17,6 +18,11 @@ export default function ThemeRegistry({
         <CssBaseline />
 
         {children}
+        <Toaster
+          toastOptions={{
+            duration: 3000,
+          }}
+        />
       </ThemeProvider>
     </NextAppDirEmotionCacheProvider>
   );
