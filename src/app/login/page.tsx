@@ -20,6 +20,7 @@ export default function Login() {
     initialValues: { email: '', password: '' },
     onSubmit: async (formValues) => {
       const res = await trigger(formValues);
+
       if ('data' in res) {
         navigate.replace('/dashboard');
       } else {

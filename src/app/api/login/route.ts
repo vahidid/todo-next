@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       if (valid) {
         cookies().set(LOGGED_IN_USER_STORAGE_KEY, foundUser.id);
         return new Response(
-          JSON.stringify({ success: false, message: 'Logged In successfully' }),
+          JSON.stringify({ success: true, message: 'Logged In successfully' }),
           {
             status: 200,
           }
